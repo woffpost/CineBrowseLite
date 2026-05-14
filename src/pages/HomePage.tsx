@@ -103,7 +103,7 @@ const HomePage = () => {
           <SelectTrigger className="w-full h-11 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-red-500/40 focus:border-red-500 hover:border-gray-600 transition-all duration-200 px-4 text-sm font-medium cursor-pointer flex justify-between items-center outline-none">
             <SelectValue placeholder="Выберите жанр" />
           </SelectTrigger>
-          <SelectContent className="bg-gray-900 border border-gray-800 text-white rounded-xl shadow-2xl p-1.5 min-w-trigger-width" position="popper" sideOffset={6}>
+          <SelectContent className="bg-gray-900 border border-gray-800 text-white rounded-lg shadow-2xl p-1.5 min-w-trigger-width" position="popper" sideOffset={6}>
             <SelectItem value="all" className="text-gray-300 focus:bg-red-600 focus:text-white cursor-pointer py-2.5 px-3 rounded-lg text-sm font-medium outline-none transition-colors">
               🍿 Все жанры
             </SelectItem>

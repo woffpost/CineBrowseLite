@@ -1,4 +1,5 @@
 import { TMDB_IMAGE_W500 } from "@/constants/tmdb";
+import { Link } from "react-router-dom";
 
 interface CastMember {
     id: number;
@@ -21,7 +22,11 @@ export const MovieCast = ({ cast, isLoading}: CastProps) => {
             <h2 className="text-3xl font-bold mb-6">В главных ролях</h2>
             <div className="flex overflow-x-auto gap-6 pb-4 scrollbar-thin">
                 {cast.map((actor: CastMember) => (
-                    <div key={actor.id} className="min-w-30 text-center flex flex-col items-center">
+                    <Link 
+                        key={actor.id} 
+                        to={`/actor/${actor.id}`}
+                        className="min-w-30 text-center flex flex-col items-center"
+                    >
                         <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-800 shadow-md mb-2">
                             {actor.profile_path ? (
                                 <img src={`${TMDB_IMAGE_W500}/${actor.profile_path}`} alt={actor.name} className="w-full h-full object-cover" />
@@ -32,9 +37,11 @@ export const MovieCast = ({ cast, isLoading}: CastProps) => {
                             )}
                         </div>
                     
-                        <p className="font-semibold text-sm line-clamp-1 text-white">{actor.name}</p>
+                        <p className="font-semibold text-sm line-clamp-1 text-white group-hover:text-red-500 transition-colors">
+                            {actor.name}
+                        </p>
                         <p className="text-xs text-gray-400 line-clamp-1">{actor.character}</p>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>

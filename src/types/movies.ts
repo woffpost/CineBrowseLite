@@ -7,5 +7,7 @@ export interface Movie {
   id: number;
   title: string;
   poster_path: string;
-  release_date: string
+  release_date: string;
+  character: string;
+  popularity?: number;
 }
