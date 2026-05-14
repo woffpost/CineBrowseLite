@@ -1,73 +1,32 @@
-# React + TypeScript + Vite
+# CineBrowse Lite 🎬
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, high-performance Movie Exploration Application built as a Single Page Application (SPA). The project demonstrates professional state management, optimized data fetching patterns, and a responsive component architecture.
 
-Currently, two official plugins are available:
+🔗 **Live Demo:** [https://vercel.app](https://vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Features
 
-## React Compiler
+- **Infinite Scrolling:** Smooth, modern content loading using HTML5 Intersection Observer API instead of legacy pagination.
+- **Smart Live Search:** Debounced search queries to minimize API overhead and prevent network flooding.
+- **Dynamic Genre Filtering:** Powered by a customized, highly accessible Shadcn/ui Select component.
+- **Advanced Dynamic Routing:** Parallel data fetching for movie details, movie credits, and user recommendations on a single page view.
+- **Stale-While-Revalidate Caching:** Advanced query caching with instant back-navigation UX.
+- **Skeleton Shimmer Loading:** Smooth UI placeholders during async data transactions for top-tier User Experience (UX).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack & Architecture
 
-## Expanding the ESLint configuration
+- **Core Framework:** React 18 (Vite boilerplate for optimized build times)
+- **State Management & Data Fetching:** TanStack Query v5 (React Query)
+- **Routing:** React Router DOM v6 (Declarative dynamic routes)
+- **HTTP Client:** Axios (Centralized instance with automated headers and regional configurations)
+- **Styling:** Tailwind CSS (Mobile-first utility classes, fluid grids, and custom animations)
+- **UI Components:** Shadcn/ui (Built on top of Radix UI primitives)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🧠 React Hooks & Architectural Solutions Used
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `useInfiniteQuery`: Handled multi-page offset pagination state from the TMDB API.
+- `useQuery`: Managed parallel, independent data streams for single movie profiles.
+- `useDebounce`: Optimized input events by delaying state synchronization until the user finished typing.
+- `useInView`: Monitored viewport intersection to programmatically trigger subsequent page evaluations.
+- `useParams` & `useNavigate`: Derived runtime application states directly from the URL hierarchy, making application views fully shareable.
+- **Component Isolation:** Decoupled business logic from presentational views by breaking layouts down into modular blocks (`MovieInfo`, `MovieCast`, `MovieRecommendations`).
