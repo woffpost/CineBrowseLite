@@ -40,7 +40,7 @@ export const MovieInfo = ({ movie }: MovieInfoProps) => {
 
           <div className="flex gap-4 mb-8">
             <span className="bg-yellow-500 text-black font-bold px-3 py-1 rounded-md">
-              IMDb {movie.vote_average.toFixed(1)}
+              IMDb {movie?.vote_average ? movie.vote_average.toFixed(1) : "0.0"}
             </span>
             <span className="border border-gray-600 px-3 py-1 rounded-md">
               {movie?.release_date
