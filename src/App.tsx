@@ -6,7 +6,7 @@ import './App.css'
 import {  Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import MoviePage from "./pages/MoviePage";
-import ActorPage from "./pages/ActorPage";
+import ActorPage from "./pages/ActorPage"
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 

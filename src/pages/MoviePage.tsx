@@ -51,12 +51,6 @@ const MoviePage = () => {
       <MovieInfo movie={movie} />
       <MovieCast cast={cast} isLoading={isCastLoading} />
       <MovieRecommendations movies={recommendations} isLoading={isRecLoading} />
-       {/* 
-        To Do 
-        <MovieCast /> 
-        &
-        <MovieRecommendations />
-         */}
     </div>
   );
 };
