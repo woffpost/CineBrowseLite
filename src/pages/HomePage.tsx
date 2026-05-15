@@ -34,6 +34,11 @@ const HomePage = () => {
     queryFn: fetchGenres,
   });
 
+  
+
+  
+  const [sortBy, setSortBy] = useState<string>("popularity.desc");
+
   const { 
     data,
     isLoading,
@@ -41,8 +46,10 @@ const HomePage = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery({
-    queryKey: ["movies", debouncedSearchTerm, selectedGenre],
+    queryKey: ["movies", debouncedSearchTerm, selectedGenre, sortBy],
     queryFn: async ({pageParam = 1}) => {
+
+      // в случае поиска, отображаем результаты ( по релевантности )
       if (debouncedSearchTerm) {
         const { data } = await api.get("/search/movie", {
           params: { query: debouncedSearchTerm, page: pageParam },
@@ -50,9 +57,13 @@ const HomePage = () => {
         return data;
       }
 
-      const endpoint = selectedGenre ? "/discover/movie" : "/movie/popular";
-      const { data } = await api.get(endpoint, {
-        params: { with_genres: selectedGenre, page: pageParam },
+      // Если поиска нет - используется этот ендпоинт, поскольку он поддерживает и поиск и сортировку
+      const { data } = await api.get("/discover/movie", {
+        params: {
+          with_genres: selectedGenre,
+          sort_by: sortBy,
+          page: pageParam
+        },
       });
       return data;
     },
@@ -66,13 +77,14 @@ const HomePage = () => {
     }
   });
 
+  const movies = data?.pages.flatMap((page) => page.results) || [];
+
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
-  const movies = data?.pages.flatMap((page) => page.results) || [];
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-4xl font-bold mb-8 text-center">Популярные фильмы</h1>
@@ -87,33 +99,59 @@ const HomePage = () => {
         />
       </div>
 
-      <div className="mb-10 max-w-xs mx-auto flex flex-col gap-2">
-        <label className="text-xs font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-1.5 px-1">
-          <Film className="w-3.5 h-3.5 text-red-500" />
-          Жанр
-        </label>
+      <div className="mb-10 max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-1.5 px-1">
+            <Film className="w-3.5 h-3.5 text-red-500" />
+            Жанр
+          </label>
 
-        <Select
-          value={selectedGenre ? String(selectedGenre) : "all"}
-          onValueChange={(value) => {
-            setSearchTerm("");
-            setSelectedGenre(value === "all" ? null : Number(value));
-          }}
-        >
-          <SelectTrigger className="w-full h-11 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-red-500/40 focus:border-red-500 hover:border-gray-600 transition-all duration-200 px-4 text-sm font-medium cursor-pointer flex justify-between items-center outline-none">
-            <SelectValue placeholder="Выберите жанр" />
-          </SelectTrigger>
-          <SelectContent className="bg-gray-900 border border-gray-800 text-white rounded-lg shadow-2xl p-1.5 min-w-trigger-width" position="popper" sideOffset={6}>
-            <SelectItem value="all" className="text-gray-300 focus:bg-red-600 focus:text-white cursor-pointer py-2.5 px-3 rounded-lg text-sm font-medium outline-none transition-colors">
-              🍿 Все жанры
-            </SelectItem>
-            {genres?.map((genre: Genre) => (
-              <SelectItem key={genre.id} value={String(genre.id)} className="text-gray-300 focus:bg-red-600 focus:text-white cursor-pointer py-2.5 px-3 rounded-lg text-sm font-medium outline-none transition-colors">
-                {genre.name}
+          <Select
+            value={selectedGenre ? String(selectedGenre) : "all"}
+            onValueChange={(value) => {
+              setSearchTerm("");
+              setSelectedGenre(value === "all" ? null : Number(value));
+            }}
+          >
+            <SelectTrigger className="w-full h-11 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-red-500/40 focus:border-red-500 hover:border-gray-600 transition-all duration-200 px-4 text-sm font-medium cursor-pointer flex justify-between items-center outline-none">
+              <SelectValue placeholder="Выберите жанр" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-900 border border-gray-800 text-white rounded-lg shadow-2xl p-1.5 min-w-trigger-width" position="popper" sideOffset={6}>
+              <SelectItem value="all" className="text-gray-300 focus:bg-red-600 focus:text-white cursor-pointer py-2.5 px-3 rounded-lg text-sm font-medium outline-none transition-colors">
+                🍿 Все жанры
               </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+              {genres?.map((genre: Genre) => (
+                <SelectItem key={genre.id} value={String(genre.id)} className="text-gray-300 focus:bg-red-600 focus:text-white cursor-pointer py-2.5 px-3 rounded-lg text-sm font-medium outline-none transition-colors">
+                  {genre.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="" className="text-xs font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-1 5 px-1">
+            <span className="text-red-500">:</span>Сортировка
+          </label>
+          <Select
+            value={sortBy}
+            onValueChange={(value) => setSortBy(value)}
+          >
+            <SelectTrigger className="w-full h-11 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-red-500/40 focus:border-red-500 hover:border-gray-600 transition-all duration-200 px-4 text-sm font-medium cursor-pointer flex justify-between items-center outline-none">
+                <SelectValue placeholder="Сортировать по" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-900 border border-gray-800 text-white rounded-xl shadow-2xl p-1.5 min-w-[var(--radix-select-trigger-width)]" position="popper" sideOffset={6}>
+              <SelectItem value="popularity.desc" className="text-gray-300 focus:bg-red-600 focus:text-white cursor-pointer py-2.5 px-3 rounded-lg text-sm font-medium outline-none transition-colors">
+                🔥 По популярности
+              </SelectItem>
+              <SelectItem value="vote_average.desc" className="text-gray-300 focus:bg-red-600 focus:text-white cursor-pointer py-2.5 px-3 rounded-lg text-sm font-medium outline-none transition-colors">
+                ⭐ По рейтингу
+              </SelectItem>
+              <SelectItem value="primary_release_date.desc" className="text-gray-300 focus:bg-red-600 focus:text-white cursor-pointer py-2.5 px-3 rounded-lg text-sm font-medium outline-none transition-colors">
+                📅 По дате выхода
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {isLoading ? (
