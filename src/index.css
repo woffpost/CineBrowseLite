@@ -109,3 +109,12 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+body #nprogress .bar {
+  background: #e50914 !important;
+  height: 3px !important;
+}
+
+body #nprogress .peg {
+  box-shadow: 0 0 10px #e50914, 0 0 5px #e50914 !important;
+}
