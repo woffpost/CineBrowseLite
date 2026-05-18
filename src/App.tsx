@@ -14,7 +14,6 @@ import "nprogress/nprogress.css";
 
 if (typeof window !== "undefined") {
   const style = document.createElement("style");
-  style.text獲取 = ""; 
   style.innerHTML = `
     #nprogress { pointer-events: none; }
     #nprogress .bar {
